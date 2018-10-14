@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "207016199616",
+    "firebase_url": "https://hanan-push-project.firebaseio.com",
+    "project_id": "hanan-push-project",
+    "storage_bucket": "hanan-push-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:207016199616:android:7d77ca0092560b6a",
+        "android_client_info": {
+          "package_name": "org.hanan.gcm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "207016199616-9bq11dgr5bk382kn5n7efpgpjv0pruka.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCX87GxFhcpvbRE5anFlA32ldSAHwhW-7A"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
