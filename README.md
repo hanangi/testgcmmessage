@@ -1,0 +1,2 @@
+# testgcmmessage
+Test gcm android
