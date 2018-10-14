@@ -22,11 +22,17 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".MyFirebaseMessagingService">
+        <receiver
+            android:name=".receiver.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="org.hanan.gcm" />
             </intent-filter>
-        </service>
+        </receiver>
+
+        <service android:name=".GcmRegistrationIntentService" />
+
     </application>
 
 </manifest>

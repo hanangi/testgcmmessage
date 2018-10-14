@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+
     compileSdkVersion 27
     defaultConfig {
         applicationId "org.hanan.gcm"
@@ -26,8 +34,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.google.firebase:firebase-messaging:17.3.3'
-    implementation 'com.google.firebase:firebase-core:16.0.1'
+    compile('com.google.android.gms:play-services-location:8.3.0') { exclude module: 'support-v4' }
+    compile('com.google.android.gms:play-services-gcm:8.3.0')
 }
 
 apply plugin: 'com.google.gms.google-services'
