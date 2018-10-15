@@ -2,7 +2,6 @@ package org.hanan.gcm;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -28,7 +27,8 @@ import javax.net.ssl.HttpsURLConnection;
 public class GcmRegistrationIntentService extends IntentService {
 
 	private static final String TAG = "GcmRegistration";
-	private final static String IP = "192.168.2.108";
+	private final static String IP = "192.168.2.108"; // hanan's home router.
+	//private final static String IP = "192.168.0.131";
 
 	public GcmRegistrationIntentService() {
 		super(TAG);
@@ -45,7 +45,12 @@ public class GcmRegistrationIntentService extends IntentService {
 
 			//String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
 			String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-			new TokenSender(token).execute();
+
+			HashMap<String, String> map = new HashMap<>();
+			map.put("isGcm" ,"true");
+			map.put("token" ,token);
+			String response = performPostCall("http://" + IP + ":8080/api/v1/token", map);
+			Log.i(TAG, "send to server response: " + response);
 
 			// Subscribe to topic channels
 			//subscribeTopics(token);
@@ -56,93 +61,62 @@ public class GcmRegistrationIntentService extends IntentService {
 		}
 	}
 
-	private class TokenSender extends AsyncTask<String, Void, String> {
+	private String  performPostCall(String requestURL, HashMap<String, String> postDataParams) {
 
-		private final String token;
+		URL url;
+		String response = "";
+		try {
+			url = new URL(requestURL);
 
-		private TokenSender(String token) {
-			this.token = token;
-		}
-
-		@Override
-		protected String doInBackground(String... params) {
-			HashMap<String, String> map = new HashMap<>();
-			map.put("isGcm" ,"false");
-			map.put("token" ,token);
-			String response = performPostCall("http://" + IP + ":8080/api/v1/token", map);
-			Log.i(TAG, "send to server " + response);
-			return "Executed";
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			// might want to change "executed" for the returned string passed
-			// into onPostExecute() but that is upto you
-		}
-
-		@Override
-		protected void onPreExecute() {}
-
-		@Override
-		protected void onProgressUpdate(Void... values) {}
-
-		private String  performPostCall(String requestURL, HashMap<String, String> postDataParams) {
-
-			URL url;
-			String response = "";
-			try {
-				url = new URL(requestURL);
-
-				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-				conn.setReadTimeout(15000);
-				conn.setConnectTimeout(15000);
-				conn.setRequestMethod("POST");
-				conn.setDoInput(true);
-				conn.setDoOutput(true);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setReadTimeout(15000);
+			conn.setConnectTimeout(15000);
+			conn.setRequestMethod("POST");
+			conn.setDoInput(true);
+			conn.setDoOutput(true);
 
 
-				OutputStream os = conn.getOutputStream();
-				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-				writer.write(getPostDataString(postDataParams));
+			OutputStream os = conn.getOutputStream();
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+			writer.write(getPostDataString(postDataParams));
 
-				writer.flush();
-				writer.close();
-				os.close();
-				int responseCode=conn.getResponseCode();
+			writer.flush();
+			writer.close();
+			os.close();
+			int responseCode=conn.getResponseCode();
 
-				if (responseCode == HttpsURLConnection.HTTP_OK) {
-					String line;
-					BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
-					while ((line=br.readLine()) != null) {
-						response+=line;
-					}
+			if (responseCode == HttpsURLConnection.HTTP_OK) {
+				String line;
+				BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
+				while ((line=br.readLine()) != null) {
+					response+=line;
 				}
-				else {
-					response="";
-
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+			else {
+				response="";
 
-			return response;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
-		private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
-			StringBuilder result = new StringBuilder();
-			boolean first = true;
-			for(Map.Entry<String, String> entry : params.entrySet()){
-				if (first)
-					first = false;
-				else
-					result.append("&");
+		return response;
+	}
 
-				result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-				result.append("=");
-				result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-			}
+	private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
+		StringBuilder result = new StringBuilder();
+		boolean first = true;
+		for(Map.Entry<String, String> entry : params.entrySet()){
+			if (first)
+				first = false;
+			else
+				result.append("&");
 
-			return result.toString();
+			result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+			result.append("=");
+			result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
 		}
+
+		return result.toString();
 	}
 }
