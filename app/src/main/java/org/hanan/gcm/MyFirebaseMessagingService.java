@@ -23,8 +23,8 @@ import javax.net.ssl.HttpsURLConnection;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
-    private final static String IP = "192.168.2.108"; // hanan's home router.
-    //private final static String IP = "10.0.0.4";
+    //private final static String IP = "192.168.2.108"; // hanan's home router.
+    private final static String IP = "10.0.0.4"; // angelsense-bezeq-5
 
     /**
      * Called when message is received.
