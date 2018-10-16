@@ -27,7 +27,8 @@ import javax.net.ssl.HttpsURLConnection;
 public class GcmRegistrationIntentService extends IntentService {
 
 	private static final String TAG = "GcmRegistration";
-	private final static String IP = "192.168.2.108"; // hanan's home router.
+	//private final static String IP = "192.168.2.108"; // hanan's home router.
+	private final static String IP = "10.0.0.4"; //angelsense-bezeq-5
 	//private final static String IP = "192.168.0.131";
 
 	public GcmRegistrationIntentService() {
@@ -39,7 +40,7 @@ public class GcmRegistrationIntentService extends IntentService {
 
 
 		try {
-			// R.string.gcm_defaultSenderId (the Sender ID) is typically derived from google-services.json.
+			// R.string.gcm_defaultSenderId (the Sender ID) is typically derived from google-services.json.angelsense-997.
 			InstanceID instanceID = InstanceID.getInstance(this);
 			instanceID.deleteInstanceID();
 
